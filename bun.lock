@@ -4,6 +4,9 @@
   "workspaces": {
     "": {
       "name": "mokili-plus",
+      "dependencies": {
+        "elysia": "^1.3.21",
+      },
     },
     "backend": {
       "name": "mokili-plus-backend",
