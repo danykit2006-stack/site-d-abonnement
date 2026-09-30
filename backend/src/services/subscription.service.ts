@@ -21,7 +21,7 @@ export async function simulatePurchase(userId: number, productId: number, priceI
   if (price.product_type !== expectedType) {
     throw new HttpError(400, "INVALID_PRODUCT_TYPE", "Le produit ne correspond pas au type de commande.");
   }
-  const reference = `SIM-${crypto.randomUUID().replaceAll("-", "").slice(0, 8).toUpperCase()}`;
+  const reference = `SIM-${crypto.randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase()}`;
 
   return await db.transaction(async () => {
     if (expectedType === "subscription") {
