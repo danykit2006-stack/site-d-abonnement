@@ -14,7 +14,7 @@ export async function getAdminDashboard() {
     `SELECT p.name AS product, COUNT(*) AS count FROM subscriptions s
      JOIN products p ON p.id = s.product_id GROUP BY p.id ORDER BY count DESC, p.name LIMIT 1`,
   ).get() ?? null;
-  const revenue = await db.query<Array<{ currency: string; total: number }>>(
+  const revenue = await db.query<{ currency: string; total: number }>(
     `SELECT currency, SUM(amount) AS total FROM payments WHERE status = 'paid' GROUP BY currency`,
   ).all();
   const revenueByProduct = await db.query(
