@@ -55,6 +55,8 @@ Les montants et dates d'expiration sont calculés depuis `product_prices`; les i
 
 Pour préparer la migration de la version locale vers Vercel avec PostgreSQL Neon :
 
+Le point d'entrée racine `app.ts` exporte l'application Elysia pour que le preset Elysiajs de Vercel la détecte automatiquement. Dans les paramètres Vercel, la racine du projet doit rester la racine du dépôt.
+
 ### Développement local
 
 ```powershell
