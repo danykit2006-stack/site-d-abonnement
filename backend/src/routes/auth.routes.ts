@@ -5,22 +5,34 @@ import { loginUser, registerUser, sessionCookie, clearedSessionCookie } from "..
 import { HttpError } from "../utils/errors";
 import { hashSessionId } from "../utils/session";
 
+const registerBodySchema = t.Object({
+  username: t.String({ minLength: 3, maxLength: 50 }),
+  email: t.String({ minLength: 3, maxLength: 254 }),
+  phone: t.String({ minLength: 9, maxLength: 13 }),
+  password: t.String({ minLength: 8, maxLength: 200 }),
+});
+const loginBodySchema = t.Object({
+  username: t.String({ minLength: 1, maxLength: 50 }),
+  password: t.String({ minLength: 1, maxLength: 200 }),
+});
+
 // Authentification client: seules les données publiques quittent le serveur.
 export const authRoutes = new Elysia({ prefix: "/api/auth" })
   .post("/register", async ({ body, set }) => {
-    const result = await registerUser(body);
+    const result = await registerUser(body as typeof registerBodySchema.static);
     set.headers["Set-Cookie"] = sessionCookie(result.sessionId);
     return { user: result.user };
   }, {
-    body: t.Object({ username: t.String({ minLength: 3, maxLength: 50 }), email: t.String({ minLength: 3, maxLength: 254 }), phone: t.String({ minLength: 9, maxLength: 13 }), password: t.String({ minLength: 8, maxLength: 200 }) }),
+    body: registerBodySchema,
   })
   .post("/login", async ({ body, set, request }) => {
     // Une limite simple par IP ralentit les essais automatisés sans stocker de données client.
     enforceLoginLimit(request);
-    const result = await loginUser(body.username, body.password);
+    const credentials = body as typeof loginBodySchema.static;
+    const result = await loginUser(credentials.username, credentials.password);
     set.headers["Set-Cookie"] = sessionCookie(result.sessionId);
     return { user: result.user };
-  }, { body: t.Object({ username: t.String({ minLength: 1, maxLength: 50 }), password: t.String({ minLength: 1, maxLength: 200 }) }) })
+  }, { body: loginBodySchema })
   .get("/me", async ({ request }) => {
     const principal = await requirePrincipal(request, "user");
     const user = await db.query<{ id: number; username: string; email: string; phone: string }>(
