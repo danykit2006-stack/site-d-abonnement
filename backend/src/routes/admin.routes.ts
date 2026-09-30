@@ -6,20 +6,31 @@ import { loginAdmin, registerAdmin, sessionCookie } from "../services/auth.servi
 import { config } from "../config/config";
 import { HttpError } from "../utils/errors";
 
+const registerBodySchema = t.Object({
+  username: t.String({ minLength: 3, maxLength: 50 }),
+  email: t.String({ minLength: 3, maxLength: 254 }),
+  adminCode: t.String({ minLength: 6, maxLength: 200 }),
+});
+const loginBodySchema = t.Object({
+  username: t.String({ minLength: 1, maxLength: 50 }),
+  adminCode: t.String({ minLength: 1, maxLength: 200 }),
+});
+
 // Les endpoints de création et compteur sont publics; les statistiques exigent une session admin.
 export const adminRoutes = new Elysia({ prefix: "/api/admin" })
   .get("/count", async () => {
     const count = Number((await db.query<{ count: number }>("SELECT COUNT(*) AS count FROM admins").get())?.count ?? 0);
     return { count, max: config.maxAdmins, available: Math.max(0, config.maxAdmins - count) };
   })
-  .post("/register", async ({ body }) => ({ admin: await registerAdmin(body) }), {
-    body: t.Object({ username: t.String({ minLength: 3, maxLength: 50 }), email: t.String({ minLength: 3, maxLength: 254 }), adminCode: t.String({ minLength: 6, maxLength: 200 }) }),
+  .post("/register", async ({ body }) => ({ admin: await registerAdmin(body as typeof registerBodySchema.static) }), {
+    body: registerBodySchema,
   })
   .post("/login", async ({ body, set }) => {
-    const result = await loginAdmin(body.username, body.adminCode);
+    const credentials = body as typeof loginBodySchema.static;
+    const result = await loginAdmin(credentials.username, credentials.adminCode);
     set.headers["Set-Cookie"] = sessionCookie(result.sessionId);
     return { admin: result.admin };
-  }, { body: t.Object({ username: t.String({ minLength: 1, maxLength: 50 }), adminCode: t.String({ minLength: 1, maxLength: 200 }) }) })
+  }, { body: loginBodySchema })
   .get("/me", async ({ request }) => {
     const principal = await requirePrincipal(request, "admin");
     const admin = await db.query<{ id: number; username: string; email: string }>(
