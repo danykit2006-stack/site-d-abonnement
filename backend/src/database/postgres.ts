@@ -1,8 +1,10 @@
-import { neon } from "@neondatabase/serverless";
+import { AsyncLocalStorage } from "node:async_hooks";
+import { neon, Pool, type PoolClient } from "@neondatabase/serverless";
 
 const databaseUrl = process.env.DATABASE_URL ?? Bun.env.DATABASE_URL ?? null;
 
 export const sql = databaseUrl ? neon(databaseUrl) : null;
+const transactionClient = new AsyncLocalStorage<PoolClient>();
 
 const assertPostgresConfigured = () => {
   if (!databaseUrl) {
@@ -19,15 +21,14 @@ const convertSqlitePlaceholders = (query: string) => {
   return rewritten;
 };
 
-let activeTransaction: { unsafe: (sql: string, params: any[]) => Promise<any[]> } | null = null;
-
 const executeQuery = async (queryText: string, args: unknown[]) => {
   assertPostgresConfigured();
   const normalized = convertSqlitePlaceholders(queryText);
-  if (activeTransaction) {
-    return await activeTransaction.unsafe(normalized, args as never[]);
+  const client = transactionClient.getStore();
+  if (client) {
+    return (await client.query(normalized, args as never[])).rows;
   }
-  return await sql!.unsafe(normalized, args as never[]);
+  return await sql!.query(normalized, args as never[]);
 };
 
 const initializePostgresSchema = async () => {
@@ -58,15 +59,24 @@ export const postgresDb = {
   },
   async transaction<T>(fn: () => Promise<T> | T) {
     assertPostgresConfigured();
-    return await sql!.begin(async (tx) => {
-      const previous = activeTransaction;
-      activeTransaction = tx as any;
-      try {
-        return await fn();
-      } finally {
-        activeTransaction = previous;
-      }
-    });
+    const pool = new Pool({ connectionString: databaseUrl! });
+    let client: PoolClient | undefined;
+    let transactionStarted = false;
+    try {
+      client = await pool.connect();
+      await client.query("BEGIN");
+      transactionStarted = true;
+      const result = await transactionClient.run(client, fn);
+      await client.query("COMMIT");
+      transactionStarted = false;
+      return result;
+    } catch (error) {
+      if (client && transactionStarted) await client.query("ROLLBACK");
+      throw error;
+    } finally {
+      client?.release();
+      await pool.end();
+    }
   },
   close() {
     // Neon handles connection lifetime on the serverless platform.
