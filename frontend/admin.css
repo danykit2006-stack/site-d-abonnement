@@ -1,0 +1,32 @@
+.admin-auth-page { background: #eef2f4; }
+
+.admin-auth-layout { min-height: 100vh; display: grid; grid-template-columns: minmax(360px, 0.9fr) minmax(500px, 1.1fr); }
+
+.admin-visual { position: relative; min-height: 100vh; overflow: hidden; background: #132d45; }
+.admin-visual > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.admin-visual-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 2.4rem clamp(2rem, 4vw, 4.5rem); background: rgba(12, 32, 50, 0.78); color: #fff; }
+.admin-visual-overlay h1 { max-width: 30rem; margin: 0 0 1rem; font-size: clamp(2.4rem, 4vw, 4.8rem); line-height: 0.97; letter-spacing: 0; }
+.admin-visual-overlay p:not(.eyebrow) { max-width: 28rem; margin: 0; color: #dfe8ee; line-height: 1.6; }
+.admin-visual-note { align-self: flex-start; padding: 0.55rem 0.75rem; border: 1px solid rgba(255, 255, 255, 0.42); font-size: 0.78rem; }
+
+.admin-form-panel { display: grid; align-items: center; padding: 3rem clamp(2rem, 8vw, 8.5rem); background: #fff; }
+.admin-form-inner { width: min(100%, 31rem); }
+.admin-form-inner h2 { margin: 0; font-size: clamp(2rem, 3vw, 2.9rem); line-height: 1; letter-spacing: 0; }
+.admin-login-link { margin-top: 0.75rem; text-decoration: none; }
+.admin-limit { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin: 0 0 1.4rem; padding: 0.9rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.admin-limit span { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+.admin-limit strong { color: var(--blue); font-size: 1.15rem; }
+
+@media (max-width: 880px) {
+  .admin-auth-layout { grid-template-columns: 1fr; }
+  .admin-visual { min-height: 22rem; }
+  .admin-form-panel { padding: 3.5rem 1.5rem; }
+  .admin-form-inner { margin: 0 auto; }
+}
+
+@media (max-width: 560px) {
+  .admin-visual { min-height: 19rem; }
+  .admin-visual-overlay { padding: 1.4rem; }
+  .admin-visual-overlay h1 { font-size: clamp(2.4rem, 11vw, 4rem); }
+  .admin-form-panel { padding: 2.2rem 1.25rem 3rem; }
+}

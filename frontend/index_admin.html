@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Inscription administrateur Mokili+." />
+    <title>Mokili+ | Inscription administrateur</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body class="admin-auth-page">
+    <main class="admin-auth-layout">
+      <section class="admin-visual" aria-label="Espace administrateur Mokili+">
+        <img
+          src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=85"
+          alt="Tableau de données sur un écran"
+        />
+        <div class="admin-visual-overlay">
+          <a class="brand brand-on-dark" href="index_admin.html" aria-label="Inscription administrateur Mokili+">Mokili<span>+</span></a>
+          <div>
+            <p class="eyebrow eyebrow-light">Espace administrateur</p>
+            <h1>Pilotez l'activite depuis un espace reserve.</h1>
+            <p>Créez un accès administrateur pour consulter les indicateurs de la plateforme.</p>
+          </div>
+          <p class="admin-visual-note">Accès limité à 5 administrateurs</p>
+        </div>
+      </section>
+
+      <section class="admin-form-panel">
+        <div class="admin-form-inner">
+          <a class="brand brand-mobile" href="index_admin.html" aria-label="Inscription administrateur Mokili+">Mokili<span>+</span></a>
+          <p class="eyebrow">Nouvel accès</p>
+          <h2>Inscription administrateur</h2>
+          <p class="intro">Vos informations permettent de créer votre accès à l’espace de gestion.</p>
+
+          <div class="admin-limit" aria-live="polite">
+            <span>Places administrateur utilisées</span>
+            <strong><span id="admin-count">0</span> / 5</strong>
+          </div>
+
+          <form id="admin-signup-form" class="signup-form" novalidate>
+            <label for="admin-username">Nom d'utilisateur</label>
+            <input id="admin-username" name="username" type="text" autocomplete="username" minlength="3" placeholder="ex. gestion.mokili" required />
+
+            <label for="admin-email">Adresse e-mail</label>
+            <input id="admin-email" name="email" type="email" autocomplete="email" placeholder="admin@exemple.com" required />
+
+            <label for="admin-code">Code administrateur</label>
+            <div class="password-row">
+              <input id="admin-code" name="adminCode" type="password" autocomplete="off" minlength="6" placeholder="Saisissez votre code" required />
+              <button class="text-icon-button" type="button" data-admin-code-toggle aria-label="Afficher le code administrateur">Afficher</button>
+            </div>
+            <small>Le code administrateur doit contenir au moins 6 caractères.</small>
+
+            <p id="admin-form-message" class="form-message" aria-live="polite"></p>
+            <button id="admin-submit-button" class="primary-button" type="submit">Créer l'accès administrateur</button>
+          </form>
+          <a class="secondary-button admin-login-link" href="connexion_admin.html">Déjà inscrit ?</a>
+        </div>
+      </section>
+    </main>
+    <script src="api.js"></script>
+    <script src="access_control.js"></script>
+    <script src="admin.js"></script>
+  </body>
+</html>

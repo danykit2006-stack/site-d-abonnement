@@ -1,0 +1,22 @@
+{
+  "name": "mokili-plus-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/server.ts",
+    "start": "bun src/server.ts",
+    "db:seed": "bun src/database/seed.ts",
+    "db:seed:postgres": "bun src/database/seed-postgres.ts",
+    "db:migrate:local": "bun src/database/migrate-local.ts",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@elysiajs/cors": "^1.3.3",
+    "@neondatabase/serverless": "^1.1.0",
+    "elysia": "^1.3.21"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

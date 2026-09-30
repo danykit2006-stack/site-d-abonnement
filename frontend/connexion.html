@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Connectez-vous à votre espace Mokili+." />
+    <title>Mokili+ | Connexion</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="auth-page">
+    <main class="auth-layout auth-layout-login">
+      <section class="auth-visual" aria-label="Mokili+">
+        <img
+          src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=85"
+          alt="Personne utilisant un ordinateur portable"
+        />
+        <div class="visual-overlay">
+          <a class="brand brand-on-dark" href="index.html" aria-label="Accueil Mokili+">Mokili<span>+</span></a>
+          <div class="visual-copy">
+            <p class="eyebrow eyebrow-light">Votre espace personnel</p>
+            <h1>Retrouvez vos abonnements en un instant.</h1>
+            <p>Suivez vos services actifs et le temps restant avant leur expiration.</p>
+          </div>
+          <div class="country-chip">RDC · Paiement en USD ou FC</div>
+        </div>
+      </section>
+
+      <section class="auth-panel">
+        <div class="auth-panel-inner login-panel-inner">
+          <a class="brand brand-mobile" href="index.html" aria-label="Accueil Mokili+">Mokili<span>+</span></a>
+          <p class="eyebrow">Bon retour</p>
+          <h1>Connectez-vous</h1>
+          <p class="intro">Utilisez le nom d'utilisateur et le mot de passe choisis à l'inscription.</p>
+
+          <form id="login-form" class="signup-form" novalidate>
+            <label for="login-username">Nom d'utilisateur</label>
+            <input id="login-username" name="username" type="text" autocomplete="username" placeholder="Votre nom d'utilisateur" required />
+
+            <label for="login-password">Mot de passe</label>
+            <div class="password-row">
+              <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Votre mot de passe" required />
+              <button class="text-icon-button" type="button" data-password-toggle="login-password" aria-label="Afficher le mot de passe">Afficher</button>
+            </div>
+
+            <p id="login-message" class="form-message" aria-live="polite"></p>
+            <button class="primary-button" type="submit">Accéder aux offres</button>
+          </form>
+          <p class="form-footer">Pas encore de compte ? <a href="index.html">Créer mon compte</a></p>
+        </div>
+      </section>
+    </main>
+    <script src="api.js"></script>
+    <script src="access_control.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

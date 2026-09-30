@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sélectionnez un abonnement ou une carte cadeau sur Mokili+." />
+    <title>Mokili+ | Choisir une offre</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="plans-page" data-protected-page="true">
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="Accueil Mokili+">Mokili<span>+</span></a>
+      <div class="user-menu-wrap">
+        <button id="user-menu-button" class="user-menu-button" type="button" aria-label="Ouvrir le menu utilisateur" aria-expanded="false">
+          <span id="user-avatar" class="user-avatar" aria-hidden="true">U</span>
+          <span id="account-name">Votre compte</span>
+        </button>
+        <div id="user-menu" class="user-menu" hidden>
+          <a href="acceuil.html">Mes abonnements</a>
+          <button id="logout-button" type="button">Se déconnecter</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="plans-intro">
+        <div>
+          <p class="eyebrow">Votre sélection</p>
+          <h1>Choisissez ce qui vous fait envie.</h1>
+          <p>Abonnements mensuels et cartes cadeaux, disponibles en quelques clics.</p>
+        </div>
+        <div class="intro-stat">
+          <strong id="service-count">8</strong>
+          <span>services disponibles</span>
+        </div>
+      </section>
+
+      <section class="catalog-section" aria-labelledby="subscriptions-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Mensuel</p>
+            <h2 id="subscriptions-title">Abonnements</h2>
+          </div>
+          <p>Les prix sont affichés en dollars et en francs congolais.</p>
+        </div>
+
+        <div id="subscription-products" class="plans-grid" aria-live="polite"></div>
+      </section>
+
+      <section class="catalog-section gift-section" aria-labelledby="gift-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">À offrir ou à utiliser</p>
+            <h2 id="gift-title">Cartes cadeaux</h2>
+          </div>
+          <p>Choisissez une valeur entre 5 $ et 100 $.</p>
+        </div>
+
+        <div id="gift-products" class="gift-grid" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <aside class="selection-bar" aria-live="polite">
+      <div class="selection-status">
+        <span class="selection-label">Votre choix</span>
+        <strong id="selected-product">Aucune offre sélectionnée</strong>
+        <span id="selected-price">Sélectionnez une offre pour continuer.</span>
+      </div>
+      <button id="checkout-button" class="primary-button" type="button" disabled>Continuer vers le paiement</button>
+    </aside>
+
+    <div id="payment-dialog" class="payment-dialog" role="dialog" aria-modal="true" aria-labelledby="payment-title" hidden>
+      <div class="dialog-card">
+        <button id="close-dialog" class="close-button" type="button" aria-label="Fermer">×</button>
+        <p class="eyebrow">Commande préparée</p>
+        <h2 id="payment-title">Votre sélection est prête.</h2>
+        <p id="dialog-summary"></p>
+        <div id="payment-step">
+          <label for="payment-method">Mode de paiement simulé</label>
+          <select id="payment-method">
+            <option>Mobile Money</option>
+            <option>Airtel Money</option>
+            <option>Orange Money</option>
+            <option>Carte bancaire</option>
+          </select>
+          <p id="payment-message" class="payment-message">Aucune transaction réelle ne sera effectuée.</p>
+          <button id="simulate-payment" class="primary-button" type="button">Simuler le paiement</button>
+        </div>
+        <div id="payment-success" hidden>
+          <p class="payment-success-text">Paiement simulé avec succès. Votre commande est confirmée.</p>
+          <a id="dashboard-link" class="primary-button" href="acceuil.html">Voir mes abonnements</a>
+        </div>
+      </div>
+    </div>
+    <script src="api.js"></script>
+    <script src="access_control.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

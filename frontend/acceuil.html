@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Consultez vos abonnements Mokili+ actifs." />
+    <title>Mokili+ | Mes abonnements</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="dashboard-page" data-protected-page="true">
+    <header class="site-header">
+      <a class="brand" href="acceuil.html" aria-label="Accueil Mokili+">Mokili<span>+</span></a>
+      <div class="user-menu-wrap">
+        <button id="user-menu-button" class="user-menu-button" type="button" aria-label="Ouvrir le menu utilisateur" aria-expanded="false">
+          <span id="user-avatar" class="user-avatar" aria-hidden="true">U</span>
+          <span id="account-name">Votre compte</span>
+        </button>
+        <div id="user-menu" class="user-menu" hidden>
+          <a href="abonnement.html">Voir les offres</a>
+          <button id="logout-button" type="button">Se déconnecter</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+      <section class="dashboard-intro">
+        <p class="eyebrow">Espace personnel</p>
+        <h1>Vos abonnements actifs.</h1>
+        <p id="dashboard-greeting">Retrouvez ici la durée restante de chacun de vos services.</p>
+        <a class="secondary-button dashboard-action" href="abonnement.html">Ajouter une offre</a>
+      </section>
+
+      <section class="active-section" aria-labelledby="active-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">En cours</p>
+            <h2 id="active-title">Services actifs</h2>
+          </div>
+          <p id="active-count">0 abonnement actif</p>
+        </div>
+        <div id="active-subscriptions" class="active-grid"></div>
+      </section>
+
+      <section id="gift-history-section" class="gift-history-section" hidden>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Commandes</p>
+            <h2>Cartes cadeaux récentes</h2>
+          </div>
+        </div>
+        <div id="gift-history" class="gift-history"></div>
+      </section>
+    </main>
+    <script src="api.js"></script>
+    <script src="access_control.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

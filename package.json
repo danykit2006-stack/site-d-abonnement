@@ -1,0 +1,14 @@
+{
+  "name": "mokili-plus",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "backend"
+  ],
+  "scripts": {
+    "dev": "cd backend && bun run dev",
+    "start": "cd backend && bun run start",
+    "test": "cd backend && bun test",
+    "vercel:dev": "vercel dev"
+  }
+}

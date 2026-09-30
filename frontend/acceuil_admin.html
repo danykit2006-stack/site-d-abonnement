@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Tableau de bord administrateur Mokili+." />
+    <title>Mokili+ | Tableau de bord administrateur</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="admin_dashboard.css" />
+  </head>
+  <body class="admin-dashboard-page" data-admin-protected-page="true">
+    <header class="admin-header">
+      <a class="brand" href="acceuil_admin.html" aria-label="Tableau de bord Mokili+">Mokili<span>+</span></a>
+      <div class="admin-header-meta">
+        <span class="admin-badge">Administrateur</span>
+        <a href="index_admin.html">Gérer les accès</a>
+        <button id="admin-logout-button" type="button">Se déconnecter</button>
+      </div>
+    </header>
+
+    <main class="admin-dashboard-main">
+      <section class="admin-dashboard-intro">
+        <div>
+          <p class="eyebrow">Vue d'ensemble</p>
+          <h1>Activité de la plateforme.</h1>
+          <p>Les indicateurs ci-dessous sont calculés à partir des inscriptions et paiements simulés.</p>
+        </div>
+        <p id="dashboard-updated" class="dashboard-updated">Mise à jour locale</p>
+      </section>
+
+      <section class="admin-metrics" aria-label="Indicateurs principaux">
+        <article class="admin-metric">
+          <span>Utilisateurs inscrits</span>
+          <strong id="registered-users">0</strong>
+          <small>Comptes créés</small>
+        </article>
+        <article class="admin-metric">
+          <span>Abonnement le plus utilisé</span>
+          <strong id="top-subscription">Aucun</strong>
+          <small id="top-subscription-count">Aucune souscription</small>
+        </article>
+        <article class="admin-metric">
+          <span>Revenu global simulé</span>
+          <strong id="total-revenue">0 $</strong>
+          <small>Calculé en USD</small>
+        </article>
+      </section>
+
+      <section class="admin-chart-layout" aria-label="Analyses des abonnements et revenus">
+        <section class="admin-chart-panel" aria-labelledby="usage-chart-title">
+          <div class="admin-chart-heading">
+            <div>
+              <p class="eyebrow">Popularité</p>
+              <h2 id="usage-chart-title">Abonnements les plus utilisés</h2>
+            </div>
+            <span id="usage-total" class="chart-total">0 souscription</span>
+          </div>
+          <div class="chart-canvas-wrap doughnut-wrap">
+            <canvas id="subscription-usage-chart" aria-label="Diagramme circulaire des abonnements les plus utilisés" role="img"></canvas>
+          </div>
+        </section>
+
+        <section class="admin-chart-panel" aria-labelledby="revenue-chart-title">
+          <div class="admin-chart-heading">
+            <div>
+              <p class="eyebrow">Revenus</p>
+              <h2 id="revenue-chart-title">Revenus par abonnement</h2>
+            </div>
+            <span class="chart-total">USD</span>
+          </div>
+          <div class="chart-canvas-wrap bar-wrap">
+            <canvas id="revenue-chart" aria-label="Diagramme à bandes des revenus simulés par abonnement" role="img"></canvas>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="api.js"></script>
+    <script src="access_control.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="admin_dashboard.js"></script>
+  </body>
+</html>

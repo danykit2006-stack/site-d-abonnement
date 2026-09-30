@@ -1,0 +1,1 @@
+Utilise le langage de programmation suivant: Frontend(HTML, CSS et JavaScript) Backend(bun et ElysiaJS) et Base de données (bun:sqlite)
