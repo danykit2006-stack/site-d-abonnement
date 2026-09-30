@@ -1,4 +1,4 @@
-import { Database } from "bun:sqlite";
+import { Database, type SQLQueryBindings } from "bun:sqlite";
 import { mkdirSync, readFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { config } from "../config/config";
@@ -14,9 +14,9 @@ export const sqliteDb = {
   query<T = unknown>(sqlText: string) {
     const statement = connection.query(sqlText);
     return {
-      get: (...args: unknown[]) => statement.get(...args) as T | undefined,
-      all: (...args: unknown[]) => statement.all(...args) as T[],
-      run: (...args: unknown[]) => statement.run(...args),
+      get: (...args: SQLQueryBindings[]) => statement.get(...args) as T | undefined,
+      all: (...args: SQLQueryBindings[]) => statement.all(...args) as T[],
+      run: (...args: SQLQueryBindings[]) => statement.run(...args),
     };
   },
   async transaction<T>(fn: () => T | Promise<T>) {
