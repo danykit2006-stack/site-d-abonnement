@@ -24,33 +24,30 @@ const giftCatalog = [
   { name: "Steam", values: [5, 10, 20, 25, 50, 75, 100] },
 ];
 
-async function ensureCatalogSeeded() {
-  const count = Number((await db.query<{ count: number }>("SELECT COUNT(*) AS count FROM products").get())?.count ?? 0);
-  if (count >= subscriptionCatalog.length + giftCatalog.length) return;
-
+export async function ensureCatalogSeeded() {
   await db.transaction(async () => {
     for (const product of subscriptionCatalog) {
-      await db.query("INSERT OR IGNORE INTO products (name, category, description, type, active) VALUES (?, ?, ?, 'subscription', TRUE)")
+      await db.query("INSERT INTO products (name, category, description, type, active) VALUES (?, ?, ?, 'subscription', TRUE) ON CONFLICT (name) DO NOTHING")
         .run(product.name, product.category, product.description);
       const row = await db.query<{ id: number }>("SELECT id FROM products WHERE name = ?").get(product.name);
       if (!row) continue;
-      await db.query("INSERT OR IGNORE INTO product_prices (product_id, currency, amount, duration_days) VALUES (?, 'USD', ?, 30)").run(row.id, product.usd);
-      await db.query("INSERT OR IGNORE INTO product_prices (product_id, currency, amount, duration_days) VALUES (?, 'CDF', ?, 30)").run(row.id, product.cdf);
+      await db.query("INSERT INTO product_prices (product_id, currency, amount, duration_days) VALUES (?, 'USD', ?, 30) ON CONFLICT (product_id, currency, amount) DO NOTHING").run(row.id, product.usd);
+      await db.query("INSERT INTO product_prices (product_id, currency, amount, duration_days) VALUES (?, 'CDF', ?, 30) ON CONFLICT (product_id, currency, amount) DO NOTHING").run(row.id, product.cdf);
     }
 
     for (const product of giftCatalog) {
-      await db.query("INSERT OR IGNORE INTO products (name, category, description, type, active) VALUES (?, 'Cartes cadeaux', ?, 'gift_card', TRUE)")
+      await db.query("INSERT INTO products (name, category, description, type, active) VALUES (?, 'Cartes cadeaux', ?, 'gift_card', TRUE) ON CONFLICT (name) DO NOTHING")
         .run(product.name, `Carte cadeau ${product.name}.`);
       const row = await db.query<{ id: number }>("SELECT id FROM products WHERE name = ?").get(product.name);
       if (!row) continue;
       for (const value of product.values) {
-        await db.query("INSERT OR IGNORE INTO product_prices (product_id, currency, amount, duration_days) VALUES (?, 'USD', ?, NULL)").run(row.id, value);
+        await db.query("INSERT INTO product_prices (product_id, currency, amount, duration_days) VALUES (?, 'USD', ?, NULL) ON CONFLICT (product_id, currency, amount) DO NOTHING").run(row.id, value);
       }
     }
   });
 }
 
-if (config.nodeEnv === "production") {
+if (db.kind === "postgres") {
   await ensureCatalogSeeded();
 }
 

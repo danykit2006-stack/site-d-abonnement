@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 
 // Les tests utilisent une base indépendante pour ne jamais modifier les données de développement.
 Bun.env.DATABASE_PATH = "./data/mokili-test.sqlite";
-const { app } = await import("../src/app");
+const { app, ensureCatalogSeeded } = await import("../src/app");
 const { db } = await import("../src/database/db");
 const { hashSessionId } = await import("../src/utils/session");
 const testDatabase = resolve(import.meta.dir, "../data/mokili-test.sqlite");
@@ -75,6 +75,8 @@ describe("API Mokili+", () => {
     expect(catalogBody.giftCards).toHaveLength(1);
     expect(catalogBody.subscriptions[0].prices).toHaveLength(1);
     expect(catalogBody.giftCards[0].prices).toHaveLength(1);
+    expect(catalogBody.subscriptions[0].prices[0].productId).toBe(catalogBody.subscriptions[0].id);
+    expect(catalogBody.subscriptions[0].prices[0].durationDays).toBe(30);
 
     const registration = await request("/api/auth/register", {
       method: "POST",
@@ -198,6 +200,20 @@ describe("API Mokili+", () => {
 
     await request("/api/auth/logout", { method: "POST", headers: { cookie: userCookie } });
     expect((await request("/api/auth/me", { headers: { cookie: userCookie } })).status).toBe(401);
+  });
+
+  it("repairs missing catalog prices when all catalog products already exist", async () => {
+    await ensureCatalogSeeded();
+    db.query("DELETE FROM product_prices WHERE product_id = (SELECT id FROM products WHERE name = 'PSN')").run();
+
+    await ensureCatalogSeeded();
+
+    const response = await request("/api/products/");
+    const catalog = await response.json();
+    const psn = catalog.giftCards.find((product: { name: string }) => product.name === "PSN");
+    const spotify = catalog.subscriptions.find((product: { name: string }) => product.name === "Spotify");
+    expect(psn.prices.map((price: { amount: number }) => price.amount)).toEqual([5, 10, 20, 25, 50, 75, 100]);
+    expect(spotify.prices).toHaveLength(2);
   });
 
   it("enforces the five-admin limit in SQLite and through the API", async () => {

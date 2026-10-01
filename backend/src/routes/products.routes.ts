@@ -7,7 +7,7 @@ export const productsRoutes = new Elysia({ prefix: "/api/products" }).get("/", a
     `SELECT id, name, category, description, type FROM products WHERE active = TRUE ORDER BY id`,
   ).all();
   const prices = await db.query<{ id: number; productId: number; currency: string; amount: number; durationDays: number | null }>(
-    "SELECT id, product_id AS productId, currency, amount, duration_days AS durationDays FROM product_prices ORDER BY amount, currency",
+    'SELECT id, product_id AS "productId", currency, amount, duration_days AS "durationDays" FROM product_prices ORDER BY amount, currency',
   ).all();
   const withPrices = products.map((product) => ({ ...product, prices: prices.filter((price) => price.productId === product.id) }));
   return {
