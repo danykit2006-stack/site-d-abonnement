@@ -11,6 +11,49 @@ import { purchasesRoutes } from "./routes/purchases.routes";
 import { subscriptionsRoutes } from "./routes/subscriptions.routes";
 import { errorBody, HttpError } from "./utils/errors";
 
+const subscriptionCatalog = [
+  { name: "Apple Music", category: "Musique", description: "Vos titres et playlists, sans interruption.", usd: 4, cdf: 10000 },
+  { name: "Spotify", category: "Musique", description: "Vos artistes préférés, où que vous soyez.", usd: 3, cdf: 7500 },
+  { name: "Netflix", category: "Films & séries", description: "Une soirée cinéma commence ici.", usd: 5, cdf: 12000 },
+  { name: "Prime Video", category: "Films & séries", description: "Des films, séries et découvertes à regarder.", usd: 6, cdf: 15000 },
+  { name: "Snapchat+", category: "Réseau social", description: "Des fonctions exclusives pour votre compte.", usd: 5, cdf: 12000 },
+  { name: "X Premium", category: "Réseau social", description: "Le niveau Premium de X, anciennement Twitter.", usd: 4, cdf: 10000 },
+];
+const giftCatalog = [
+  { name: "PSN", values: [5, 10, 20, 25, 50, 75, 100] },
+  { name: "Steam", values: [5, 10, 20, 25, 50, 75, 100] },
+];
+
+async function ensureCatalogSeeded() {
+  const count = Number((await db.query<{ count: number }>("SELECT COUNT(*) AS count FROM products").get())?.count ?? 0);
+  if (count >= subscriptionCatalog.length + giftCatalog.length) return;
+
+  await db.transaction(async () => {
+    for (const product of subscriptionCatalog) {
+      await db.query("INSERT OR IGNORE INTO products (name, category, description, type, active) VALUES (?, ?, ?, 'subscription', TRUE)")
+        .run(product.name, product.category, product.description);
+      const row = await db.query<{ id: number }>("SELECT id FROM products WHERE name = ?").get(product.name);
+      if (!row) continue;
+      await db.query("INSERT OR IGNORE INTO product_prices (product_id, currency, amount, duration_days) VALUES (?, 'USD', ?, 30)").run(row.id, product.usd);
+      await db.query("INSERT OR IGNORE INTO product_prices (product_id, currency, amount, duration_days) VALUES (?, 'CDF', ?, 30)").run(row.id, product.cdf);
+    }
+
+    for (const product of giftCatalog) {
+      await db.query("INSERT OR IGNORE INTO products (name, category, description, type, active) VALUES (?, 'Cartes cadeaux', ?, 'gift_card', TRUE)")
+        .run(product.name, `Carte cadeau ${product.name}.`);
+      const row = await db.query<{ id: number }>("SELECT id FROM products WHERE name = ?").get(product.name);
+      if (!row) continue;
+      for (const value of product.values) {
+        await db.query("INSERT OR IGNORE INTO product_prices (product_id, currency, amount, duration_days) VALUES (?, 'USD', ?, NULL)").run(row.id, value);
+      }
+    }
+  });
+}
+
+if (config.nodeEnv === "production") {
+  await ensureCatalogSeeded();
+}
+
 const allowedOrigins = [config.frontendUrl, `http://localhost:${config.port}`, `http://127.0.0.1:${config.port}`];
 
 export const app = new Elysia()
