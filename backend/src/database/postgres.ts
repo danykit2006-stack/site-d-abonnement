@@ -55,8 +55,12 @@ export const postgresDb = {
         return rows as T[];
       },
       run: async (...args: unknown[]) => {
-        await executeQuery(sqlText, args.flat());
-        return { lastInsertRowid: null };
+        const isInsert = /^\s*INSERT\b/i.test(sqlText);
+        const queryText = isInsert && !/\bRETURNING\b/i.test(sqlText)
+          ? `${sqlText} RETURNING id`
+          : sqlText;
+        const rows = await executeQuery(queryText, args.flat());
+        return { lastInsertRowid: rows[0]?.id ?? null };
       },
     };
   },
