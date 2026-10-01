@@ -70,7 +70,11 @@ describe("API Mokili+", () => {
     expect(await health.json()).toEqual({ status: "ok", database: "connected" });
 
     const catalog = await request("/api/products/");
-    expect((await catalog.json()).subscriptions).toHaveLength(1);
+    const catalogBody = await catalog.json();
+    expect(catalogBody.subscriptions).toHaveLength(1);
+    expect(catalogBody.giftCards).toHaveLength(1);
+    expect(catalogBody.subscriptions[0].prices).toHaveLength(1);
+    expect(catalogBody.giftCards[0].prices).toHaveLength(1);
 
     const registration = await request("/api/auth/register", {
       method: "POST",
