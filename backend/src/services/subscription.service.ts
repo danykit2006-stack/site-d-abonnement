@@ -60,7 +60,7 @@ export async function updateExpiredSubscriptions() {
 export async function listUserSubscriptions(userId: number) {
   await updateExpiredSubscriptions();
   const rows = await db.query<{ id: number; product: string; amount: number; currency: string; status: string; startedAt: string; expiresAt: string }>(
-    `SELECT s.id, p.name AS product, s.amount, s.currency, s.status, s.started_at AS startedAt, s.expires_at AS expiresAt
+    `SELECT s.id, p.name AS product, s.amount, s.currency, s.status, s.started_at AS "startedAt", s.expires_at AS "expiresAt"
      FROM subscriptions s JOIN products p ON p.id = s.product_id
      WHERE s.user_id = ? ORDER BY s.created_at DESC`,
   ).all(userId);
@@ -72,7 +72,7 @@ export async function listUserSubscriptions(userId: number) {
 
 export async function listUserPurchases(userId: number) {
   return await db.query<{ id: number; product: string; amount: number; currency: string; status: string; purchasedAt: string }>(
-    `SELECT pu.id, p.name AS product, pu.amount, pu.currency, pu.status, pu.created_at AS purchasedAt
+    `SELECT pu.id, p.name AS product, pu.amount, pu.currency, pu.status, pu.created_at AS "purchasedAt"
      FROM purchases pu JOIN products p ON p.id = pu.product_id
      WHERE pu.user_id = ? ORDER BY pu.created_at DESC LIMIT 3`,
   ).all(userId);

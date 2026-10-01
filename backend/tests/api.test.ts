@@ -168,6 +168,11 @@ describe("API Mokili+", () => {
       body: JSON.stringify({ productId: 1, priceId: 1 }),
     });
     expect((await directSubscription.json()).subscription.amount).toBe(12);
+    const activeForOtherUser = await request("/api/subscriptions/me", { headers: { cookie: otherCookie } });
+    const activeSubscription = (await activeForOtherUser.json()).subscriptions[0];
+    expect(activeSubscription.status).toBe("active");
+    expect(activeSubscription.expiresAt).toBeString();
+    expect(Number.isNaN(Date.parse(activeSubscription.expiresAt))).toBe(false);
 
     db.query("UPDATE subscriptions SET expires_at = ? WHERE user_id = 1").run(new Date(Date.now() - 1000).toISOString());
     const expiredSubscription = await request("/api/subscriptions/me", { headers: { cookie: userCookie } });
