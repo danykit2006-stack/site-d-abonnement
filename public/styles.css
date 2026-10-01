@@ -94,6 +94,7 @@ small { color: var(--muted); font-size: 0.74rem; line-height: 1.3; }
 .light-button:hover { background: var(--lime); }
 .form-footer { margin: 1.3rem 0 0; color: var(--muted); font-size: 0.77rem; line-height: 1.55; }
 .form-footer a { color: var(--blue); font-weight: 750; }
+.admin-entry-button { margin-bottom: 1.25rem; text-align: center; text-decoration: none; }
 
 .plans-page { padding-bottom: 7rem; }
 .site-header { display: flex; align-items: center; justify-content: space-between; min-height: 4.75rem; padding: 0 clamp(1.25rem, 6vw, 6rem); border-bottom: 1px solid var(--line); background: #fff; }

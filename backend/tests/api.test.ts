@@ -30,7 +30,9 @@ describe("API Mokili+", () => {
   it("serves the frontend entry point and its static assets", async () => {
     const page = await request("/");
     expect(page.status).toBe(200);
-    expect(await page.text()).toContain('href="styles.css"');
+    const pageHtml = await page.text();
+    expect(pageHtml).toContain('href="styles.css"');
+    expect(pageHtml).toContain('href="index_admin.html">Se connecter en tant qu’administrateur</a>');
 
     for (const path of [
       "/index.html",
