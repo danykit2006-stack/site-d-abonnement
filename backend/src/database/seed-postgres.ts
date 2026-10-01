@@ -1,4 +1,10 @@
-import { sql } from "./postgres";
+import { postgresSchemaReady, sql } from "./postgres";
+
+if (!sql) {
+  throw new Error("DATABASE_URL is not configured for the Neon/PostgreSQL runtime.");
+}
+
+await postgresSchemaReady;
 
 const products = [
   { id: 1, name: "Apple Music", category: "subscription", description: "Abonnement Apple Music", type: "subscription" },

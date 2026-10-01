@@ -23,6 +23,7 @@ const convertSqlitePlaceholders = (query: string) => {
 
 const executeQuery = async (queryText: string, args: unknown[]) => {
   assertPostgresConfigured();
+  await postgresSchemaReady;
   const normalized = convertSqlitePlaceholders(queryText);
   const client = transactionClient.getStore();
   if (client) {
@@ -32,12 +33,14 @@ const executeQuery = async (queryText: string, args: unknown[]) => {
 };
 
 const initializePostgresSchema = async () => {
-  if (!databaseUrl || !sql) return;
+  if (!sql) return;
   const schema = await Bun.file(new URL("./postgres-schema.sql", import.meta.url)).text();
-  await sql.unsafe(schema);
+  for (const statement of schema.split(";").map((part) => part.trim()).filter(Boolean)) {
+    await sql.query(statement);
+  }
 };
 
-void initializePostgresSchema();
+export const postgresSchemaReady = initializePostgresSchema();
 
 export const postgresDb = {
   kind: "postgres" as const,
@@ -83,6 +86,7 @@ export const postgresDb = {
   },
   async ping() {
     if (!databaseUrl) return false;
+    await postgresSchemaReady;
     const rows = await sql!`SELECT 1 AS connected`;
     return Number(rows[0]?.connected ?? 0) === 1;
   },
