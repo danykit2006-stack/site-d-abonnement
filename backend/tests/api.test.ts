@@ -27,6 +27,20 @@ afterAll(() => {
 });
 
 describe("API Mokili+", () => {
+  it("serves the frontend entry point and its static assets", async () => {
+    const page = await request("/");
+    expect(page.status).toBe(200);
+    expect(await page.text()).toContain('href="styles.css"');
+
+    const stylesheet = await request("/styles.css");
+    expect(stylesheet.status).toBe(200);
+    expect(await stylesheet.text()).toContain(".auth-layout");
+
+    const script = await request("/app.js");
+    expect(script.status).toBe(200);
+    expect(await script.text()).toContain("#signup-form");
+  });
+
   it("persists accounts, simulates paid orders and keeps roles isolated", async () => {
     const health = await request("/api/health");
     expect(await health.json()).toEqual({ status: "ok", database: "connected" });

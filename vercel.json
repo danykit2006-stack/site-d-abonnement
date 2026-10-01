@@ -1,5 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "bunVersion": "1.x"
+  "bunVersion": "1.x",
+  "functions": {
+    "app.ts": {
+      "includeFiles": "frontend/**"
+    }
+  }
 }

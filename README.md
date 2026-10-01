@@ -78,6 +78,8 @@ bun run vercel:dev
 vercel
 ```
 
+La configuration Vercel inclut les fichiers de `frontend/` dans la fonction Bun : le serveur peut ainsi servir les pages, feuilles de style et scripts utilisés par les routes statiques.
+
 Configure ensuite les variables d'environnement dans Vercel :
 
 - `DATABASE_URL`
