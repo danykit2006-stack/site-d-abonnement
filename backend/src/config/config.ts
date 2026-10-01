@@ -11,7 +11,7 @@ export const config = {
   nodeEnv: Bun.env.NODE_ENV ?? "development",
   databaseUrl: Bun.env.DATABASE_URL ?? null,
   databasePath: resolve(backendRoot, Bun.env.DATABASE_PATH ?? "./data/mokili.sqlite"),
-  frontendPath: resolve(backendRoot, "../frontend"),
+  frontendPath: resolve(backendRoot, "../public"),
   sessionDurationDays: 7,
   maxAdmins: 5,
 } as const;
