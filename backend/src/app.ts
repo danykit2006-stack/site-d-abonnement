@@ -49,6 +49,22 @@ export const app = new Elysia()
     };
   })
   .get("/", () => Bun.file(resolve(config.frontendPath, "index.html")))
+  .get("/index.html", () => Bun.file(resolve(config.frontendPath, "index.html")))
+  .get("/abonnement.html", () => Bun.file(resolve(config.frontendPath, "abonnement.html")))
+  .get("/acceuil.html", () => Bun.file(resolve(config.frontendPath, "acceuil.html")))
+  .get("/acceuil_admin.html", () => Bun.file(resolve(config.frontendPath, "acceuil_admin.html")))
+  .get("/connexion.html", () => Bun.file(resolve(config.frontendPath, "connexion.html")))
+  .get("/connexion_admin.html", () => Bun.file(resolve(config.frontendPath, "connexion_admin.html")))
+  .get("/index_admin.html", () => Bun.file(resolve(config.frontendPath, "index_admin.html")))
+  .get("/styles.css", () => Bun.file(resolve(config.frontendPath, "styles.css")))
+  .get("/admin.css", () => Bun.file(resolve(config.frontendPath, "admin.css")))
+  .get("/admin_dashboard.css", () => Bun.file(resolve(config.frontendPath, "admin_dashboard.css")))
+  .get("/api.js", () => Bun.file(resolve(config.frontendPath, "api.js")))
+  .get("/app.js", () => Bun.file(resolve(config.frontendPath, "app.js")))
+  .get("/access_control.js", () => Bun.file(resolve(config.frontendPath, "access_control.js")))
+  .get("/admin.js", () => Bun.file(resolve(config.frontendPath, "admin.js")))
+  .get("/admin_dashboard.js", () => Bun.file(resolve(config.frontendPath, "admin_dashboard.js")))
+  .get("/admin_login.js", () => Bun.file(resolve(config.frontendPath, "admin_login.js")))
   .get("/*", async ({ params, set, request }) => {
     const pathname = new URL(request.url).pathname;
     if (pathname.startsWith("/api/")) {

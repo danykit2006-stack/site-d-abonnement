@@ -22,7 +22,7 @@ Le fichier `backend/.env` est local et ignoré par Git. Les valeurs de référen
 - `backend/src/services/`: authentification, commandes, abonnements et statistiques.
 - `backend/src/database/`: schéma SQLite, connexion et seed.
 - `backend/src/middleware/`: sessions et contrôle des rôles.
-- `public/`: pages, styles et scripts statiques du frontend, publiés par Vercel et servis par le backend local.
+- `public/`: pages, styles et scripts statiques du frontend, servis par les routes Elysia.
 - `frontend/`: documentation et consignes liées à l'interface.
 
 Les mots de passe et codes admin sont hashés avec Argon2id via `Bun.password`. Les identifiants de session aléatoires sont stockés en SQLite; les cookies sont HTTP-only et SameSite=Lax. Aucun paiement réel n'est déclenché.
@@ -79,7 +79,7 @@ bun run vercel:dev
 vercel
 ```
 
-Vercel sert directement les pages et assets placés dans `public/`; le point d'entrée Elysia racine reste dédié aux routes de l'application et de l'API.
+Les routes Elysia exposent explicitement les fichiers de `public/` pour que les pages et assets soient inclus dans la fonction Vercel; le fallback statique conserve le service local et le traitement des chemins inconnus.
 
 Configure ensuite les variables d'environnement dans Vercel :
 

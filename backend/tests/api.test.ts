@@ -32,13 +32,37 @@ describe("API Mokili+", () => {
     expect(page.status).toBe(200);
     expect(await page.text()).toContain('href="styles.css"');
 
-    const stylesheet = await request("/styles.css");
-    expect(stylesheet.status).toBe(200);
-    expect(await stylesheet.text()).toContain(".auth-layout");
+    for (const path of [
+      "/index.html",
+      "/abonnement.html",
+      "/acceuil.html",
+      "/acceuil_admin.html",
+      "/connexion.html",
+      "/connexion_admin.html",
+      "/index_admin.html",
+      "/styles.css",
+      "/admin.css",
+      "/admin_dashboard.css",
+      "/api.js",
+      "/app.js",
+      "/access_control.js",
+      "/admin.js",
+      "/admin_dashboard.js",
+      "/admin_login.js",
+    ]) {
+      expect((await request(path)).status).toBe(200);
+    }
 
-    const script = await request("/app.js");
-    expect(script.status).toBe(200);
-    expect(await script.text()).toContain("#signup-form");
+    for (const asset of [
+      ["/styles.css", ".auth-layout"],
+      ["/api.js", "window.apiFetch"],
+      ["/access_control.js", "apiFetch"],
+      ["/app.js", "#signup-form"],
+    ]) {
+      const response = await request(asset[0]);
+      expect(response.status).toBe(200);
+      expect(await response.text()).toContain(asset[1]);
+    }
   });
 
   it("persists accounts, simulates paid orders and keeps roles isolated", async () => {
